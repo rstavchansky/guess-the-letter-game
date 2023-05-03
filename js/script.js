@@ -5,7 +5,7 @@ const guessButton = document.querySelector(".guess");
 // selects text input for the letter
 const letter = document.querySelector(".letter");
 // selects empty paragraph for word in progress
-const progress = document.querySelector(".word-in-progress");
+const wordInProgress = document.querySelector(".word-in-progress");
 // selects paragraph for remaining guesses
 const remaining = document.querySelector(".remaining")
 // selects span inside remaining
@@ -26,7 +26,7 @@ const swapCircles = function (word) {
         //console.log(letter);
         mysteryLetters.push("●");
     }
-    letter.innerText = mysteryLetters.join("");
+    wordInProgress.innerText = mysteryLetters.join("");
 };
 
 guessButton.addEventListener("click", function (e) {
@@ -63,5 +63,39 @@ const makeGuess = function (validatedInput) {
     } else {
         guessedLetters.push(validatedInput);
         console.log(guessedLetters);
+        updateWithGuesses();
     }
 };
+
+const updateWithGuesses = function () {
+    guesses.innerText = "";
+    for (const letter of guessedLetters) {
+        const li = document.createElement("li");
+        li.innerText = letter;
+        guesses.append(li);
+    }
+};
+
+const updateWordInProgress = function (guessedLetters) {
+    const wordUpper = word.toUpperCase();
+    const wordArray = wordUpper.split("");
+    console.log(wordArray);
+    const revealWord = [];
+    for (const letter of wordArray) {
+        if (guessedLetters.includes(letter)) {
+            revealWord.push(letter.toLocaleUpperCase());
+      } else {
+      revealWord.push("●");
+      }
+    }
+    wordInProgress.innerText = revealWord.join("");
+};
+
+const checkGameStatus = function () {
+    if (word.toUpperCase() === wordInProgress.innerText) {
+        message.classList.add("win");
+        message.innerHTML = `<p class="highlight">You guessed correct the word! Congrats!</p>`
+  }
+};
+
+checkGameStatus();
