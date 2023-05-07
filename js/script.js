@@ -3,11 +3,12 @@ const guessLetterButton = document.querySelector(".guess");
 const letterInput = document.querySelector(".letter");
 const wordInProgress = document.querySelector(".word-in-progress");
 const remainingGuessesElement = document.querySelector(".remaining");
-const remainingGuessesSpan = document.querySelector(".remaining span");
+const remainingGuessesSpan = document.querySelector(".guesses-left");
 const message = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
+let remainingGuesses = 8;
 
-const word = "magnolia";
+let word = "magnolia";
 const guessedLetters = [];
 
 // Display our symbols as placeholders for the chosen word's letters
@@ -63,6 +64,7 @@ const makeGuess = function (guess) {
     guessedLetters.push(guess);
     console.log(guessedLetters);
     showGuessedLetters();
+    countRemainingGuesses(guess);
     updateWordInProgress(guessedLetters);
   }
 };
@@ -91,6 +93,23 @@ const updateWordInProgress = function (guessedLetters) {
   // console.log(revealWord);
   wordInProgress.innerText = revealWord.join("");
   checkIfWin();
+};
+
+const countRemainingGuesses = function (guess) {
+  word = word.toUpperCase();
+  if (word.includes(guess)) {
+    message.innerText = "Nice! This one is in the word";
+  } else {
+    message.innerText = "Sorry, the word doesn't include this letter.";
+    remainingGuesses -= 1;
+  }
+  if (remainingGuesses === 0) {
+    message.innerText = `Too bad. Game over. The word was ${word}`;
+  } else if (remainingGuesses === 1) {
+    remainingGuessesSpan.innerText = `1 guess`;
+  } else if (remainingGuesses > 1) {
+    remainingGuessesSpan.innerText = `${remainingGuesses} guesses`;
+  }
 };
 
 const checkIfWin = function () {
