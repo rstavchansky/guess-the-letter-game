@@ -8,6 +8,16 @@ const message = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 let remainingGuesses = 8;
 
+const getWord = async function () {
+  const request = await fetch(`https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt`);
+  const words = await request.text();
+  const wordArray = words.split("\n");
+  //console.log(wordArray);
+  const randomIndex = Math.floor(Math.random() * wordArray.length);
+  word = wordArray[randomIndex].trim();
+  placeholder(word);
+}
+
 let word = "magnolia";
 const guessedLetters = [];
 
@@ -21,7 +31,7 @@ const placeholder = function (word) {
   wordInProgress.innerText = placeholderLetters.join("");
 };
 
-placeholder(word);
+getWord();
 
 guessLetterButton.addEventListener("click", function (e) {
   e.preventDefault();
@@ -97,11 +107,11 @@ const updateWordInProgress = function (guessedLetters) {
 
 const countRemainingGuesses = function (guess) {
   word = word.toUpperCase();
-  if (word.includes(guess)) {
-    message.innerText = "Nice! This one is in the word";
-  } else {
+  if (!word.includes(guess)) {
     message.innerText = "Sorry, the word doesn't include this letter.";
     remainingGuesses -= 1;
+  } else {
+    message.innerText = `Nice job; The letter ${guess} is in the game.`
   }
   if (remainingGuesses === 0) {
     message.innerText = `Too bad. Game over. The word was ${word}`;
